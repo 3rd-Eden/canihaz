@@ -1,0 +1,18 @@
+{
+  "author": "Arnout Kazemier <info@3rd-Eden.com> (3rd-Eden.com)",
+  "name": "canihaz",
+  "description": "canihaz allows you to lazy install npm modules because not every dependency is needed.",
+  "version": "0.0.0",
+  "homepage": "https://github.com/3rd-Eden/canihaz",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/3rd-Eden/canihaz.git"
+  },
+  "main": "lib/canihaz.js",
+  "engines": {
+    "node": "~0.8.0"
+  },
+  "dependencies": {
+    "npm": "1.1.32"
+  }
+}
