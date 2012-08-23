@@ -1,3 +1,4 @@
+[![build status](https://secure.travis-ci.org/3rd-Eden/canihaz.png)](http://travis-ci.org/3rd-Eden/canihaz)
 # Canihaz?
 
 Canihaz is module that allows you to lazy install npm modules that might not be
