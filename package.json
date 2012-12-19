@@ -12,5 +12,8 @@
   "main": "lib/canihaz.js",
   "dependencies": {
     "npm": "1.1.69"
-  }
+  },
+  "bundledDependencies": [
+    "npm"
+  ]
 }
