@@ -41,7 +41,7 @@ queue.setMaxListeners(100);
  * - home: The location of the home folders, as this is operating system
  *   specific or you might want to override this if you want to store the dot
  *   folder in a different location. Should be string.
- * - location: The location of the package.json that we needt parse and read out
+ * - location: The location of the package.json that we need to parse and read out
  *   the possible dependencies for lazy installation.
  * - key: Which property should we scan for the optional dependencies? This
  *   allows you to also lazy install optionalDependencies for example.
@@ -60,7 +60,7 @@ module.exports = function canihazitplxktnxilubai(config) {
     , home: config.home || process.env.HOME || process.env.USERPROFILE
     , location: config.location || path.resolve(__dirname, '../..')
     , key: config.key || 'canihaz'
-    , reuse: false
+    , reuse: false // will be used later
   };
 
   // The installation location, this will be replaced if the dot folder option
