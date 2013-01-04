@@ -27,12 +27,23 @@ are needed.
 
 - [Installation][0]
 - [How does it work][1]
-- [api][2]
-- [license][3]
+- [API][2]
+  - [package.json example][2.1]
+  - [Configuration][2.2]
+  - [Configured dependencies][2.3]
+  - [Un-configured dependencies][2.4]
+  - [Multiple dependencies][2.5]
+- [License][3]
 
 [0]: #installation "Install all the things"
 [1]: #how-does-it-work "it's like magic, unicorns and narwals combined in to awesomness"
-[2]: #api "the bits that you can use and configure"
+[2]: #api "The bits that you can use and configure"
+[2.1]: #packagejson-example
+[2.2]: #configuration
+[2.3]: #installingrequiring-a-configured-dependency
+[2.4]: #installingrequiring-a-un-configured-dependency
+[2.5]: #installingrequiring-multiple-dependencies
+[3]: #license-mit "Stuff"
 
 ---
 
