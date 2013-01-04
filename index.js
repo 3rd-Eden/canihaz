@@ -95,7 +95,12 @@ module.exports = function canihazitplxktnxilubai(config) {
    * @param {Function} callback
    */
   function has(name, version, cb) {
-    if (typeof name === 'object' && !Array.isArray(name)) {
+    var regular = typeof name === 'string'
+        && typeof version === 'string'
+        && typeof cb ===  'version'
+        && version === '' || semver.valid(version);
+
+    if (!regular) {
       var args = Array.prototype.slice.call(arguments, 0)
         , fetched = {}
         , order = []
