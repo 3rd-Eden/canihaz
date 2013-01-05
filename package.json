@@ -28,7 +28,8 @@
   },
   "devDependencies": {
     "mocha": "1.7.x",
-    "chai": "1.4.x"
+    "chai": "1.4.x",
+    "rimraf": "2.1.x"
   },
   "canihaz": {
     "request": "2.12.x",
