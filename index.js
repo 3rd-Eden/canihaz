@@ -33,6 +33,20 @@ catch (e) { npm = 'npm'; }
 queue.setMaxListeners(100);
 
 /**
+ * Simple helper function for debugging, if no process.env.DEBUG is set it will
+ * degrade to emiting the events over the queue.
+ *
+ * @type {Function}
+ */
+var debug = process.env
+  && process.env.DEBUG
+  && ~process.env.DEBUG.indexOf('canihaz')
+? console.log.bind(console, '[debug::canihaz]')
+: function debug(line) {
+    queue.emit('canihaz debug', line);
+};
+
+/**
  * Require all the things.
  *
  * Options:
@@ -65,7 +79,7 @@ module.exports = function canihazitplxktnxilubai(config) {
 
   // The installation location, this will be replaced if the dot folder option
   // is set.
-  configuration.installation = config.installation || config.location;
+  configuration.installation = config.installation || configuration.location;
 
   // For legacy reasons we accept a string as argument which would be used as
   // dot folder.
@@ -85,6 +99,8 @@ module.exports = function canihazitplxktnxilubai(config) {
     dependencies = require(
       path.join(configuration.location, 'package.json')
     )[configuration.key];
+
+    debug('found dependencies in the package.json: '+ JSON.stringify(dependencies, null, 2));
   } catch (e) {}
 
   /**
@@ -107,6 +123,8 @@ module.exports = function canihazitplxktnxilubai(config) {
         , error;
 
       cb = args.pop();
+      debug('doing a multi installation for :'+ JSON.stringify(args));
+
       return args.forEach(function install(lib) {
         var name, version, checker;
 
@@ -128,7 +146,7 @@ module.exports = function canihazitplxktnxilubai(config) {
         if (name in has && !version) {
           checker = has[name];
         } else {
-          checker = requiretron3000.bind(requiretron3000, configuration, name, version);
+          checker = requiretron3000.bind(undefined, configuration, name, version);
         }
 
         checker(function fetching(err, library) {
@@ -153,6 +171,7 @@ module.exports = function canihazitplxktnxilubai(config) {
     }
 
     // Defer the call the requiretron3000 and make it happen
+    debug('installing '+ name +'@'+ version);
     return requiretron3000(configuration, name, version, cb);
   }
 
@@ -175,6 +194,7 @@ module.exports = function canihazitplxktnxilubai(config) {
     Object.defineProperty(has, name, {
       value: function findPackage(callback) {
         if (cache) return process.nextTick(function loadCacheAsync() {
+          debug('cache hit for '+ name +'@'+ version);
           callback(undefined, cache);
         });
 
@@ -198,7 +218,7 @@ module.exports = function canihazitplxktnxilubai(config) {
 module.exports.queue = queue;
 
 /**
- * Proudly introducing the requiretron3000, the brandspanking new require system
+ * Proudly introducing the requiretron3000, the brand spanking new require system
  * that automatically installs dependencies that are not installed.
  *
  * @param {Object} config the configuration object of the module
@@ -212,7 +232,7 @@ function requiretron3000(config, name, version, cb) {
     , x;
 
   // Try to require the module, to see if it's installed, maybe globally or what
-  // ever.. somewhere else.. but inorder to check if it satishfies the version
+  // ever.. somewhere else.. but in order to check if it satisfies the version
   // number we need to find the path, parse the package.json and see if it's
   // a correct match
   try {
@@ -224,8 +244,8 @@ function requiretron3000(config, name, version, cb) {
       , 'node_modules', name, 'package.json'
     )).version;
 
-    // Make sure it satishfies the semver, if it does, require all the things as
-    // we have a match, whoop whooop
+    // Make sure it satisfies the semver, if it does, require all the things as
+    // we have a match, whoop whoop
     if (!version || semver.satisfies(pkgversion, version)) {
       return cb(undefined, require(name));
     }
@@ -255,22 +275,35 @@ function requiretron3000(config, name, version, cb) {
  * Install the package in the given location
  *
  * @param {String} cwd current working directory where we spawn the child
- * @param {String} name name of the npm module to install
+ * @param {String} name name of the NPM module to install
  * @param {String} version version number or supply an empty string
  * @param {Function} cb callback, all done <3
  * @api private
  */
 function install(cwd, name, version, cb) {
-  // If the version number contains spaces we need to wrap it in double quotes
-  // as we are mostlikely dealing with version range installation that contains
-  // silly shit such as: >=0.1.0 <0.2.0
-  if (version && /\s/.test(version)) version = '"'+ version +'"';
-  if (version) version = '@'+ version;
+  if (version) {
+    // * installations is basically just an installation without a version, so
+    // just ignore this version
+    if (version === '*') version = '';
+
+    // If it doesn't get through the `validRange` it's probably not a Semver but
+    // an url like git@github or a tarball
+    if (version && semver.validRange(version)) {
+      // If the version number contains spaces we need to wrap it in double quotes
+      // as we are most likely dealing with version range installation that contains
+      // silly shit such as: >=0.1.0 <0.2.0
+      if (version && /\s/.test(version)) version = '"'+ version +'"';
+      if (version) version = '@'+ version;
+    } else if (version) {
+      name = version;
+      version = '';
+    }
+  }
 
   var installation = name + version;
 
   // Check if we already have an installation running for this module, if so, we
-  // are gonna register a listener for the installatino
+  // are gonna register a listener for the installation
   if (queue.listeners(installation).length) return queue.once(installation, cb);
 
   // No fresh installations for this module, so add a listener so we can flag
@@ -284,6 +317,7 @@ function install(cwd, name, version, cb) {
   var command = (npm +' install '+ installation).trim();
   command += ' --parseable'; // Parsable output
 
+  debug('spawning NPM: '+ command + ', in cwd: '+ cwd);
   exec(command
     , {
           cwd: cwd  // Where should we spawn the installation
@@ -326,10 +360,12 @@ function ensure(dir, cb) {
     if (err) return mkdirp(dir, function mkdir(err) {
       if (err) return cb(new Error('Failed to create or locate the path'));
 
+      debug('successfully generated the dependencies directory ' + dir);
       cb();
     });
 
     if (!stat.isDirectory()) {
+      debug('we cant install dependencies in the supplied path, its not a folder');
       return cb(new Error('The given path should be a directory'));
     }
 
