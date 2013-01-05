@@ -43,6 +43,15 @@ describe('canihaz?', function () {
       });
     });
 
+    it('should read the package.json from a different location', function () {
+      var has = canihaz({ location: __dirname })
+        , definitions = require(__dirname + '/package.json');
+
+      Object.keys(definitions.canihaz).forEach(function (lib) {
+        expect(has[lib]).to.be.a('function');
+      });
+    });
+
     it('should create a dot folder in the home folder', function (done) {
       var has = canihaz({ dot: 'foo' });
 
@@ -55,6 +64,17 @@ describe('canihaz?', function () {
     });
 
     it('should create a dot folder in the home folder (alternate)', function (done) {
+      var has = canihaz('foo');
+
+      has.request(function lazy(err, request) {
+        expect(request).to.be.a('function');
+        expect(err).to.not.be.an.instanceof(Error);
+
+        fs.stat(path.join(home, '.foo'), done);
+      });
+    });
+
+    it('should create a dot folder in a custom home folder', function (done) {
       var has = canihaz({ home: __dirname, dot: 'foo' });
 
       has.request(function lazy(err, request) {
@@ -64,10 +84,6 @@ describe('canihaz?', function () {
         fs.stat(path.join(__dirname, '.foo'), done);
       });
     });
-
-    it('should create a dot folder in a custom home folder');
-
-    it('should read the package.json from a different location');
 
     after(function cleanup(done) {
       var rmrf = require('rimraf')
