@@ -34,7 +34,8 @@ are needed.
   - [Configured dependencies][2.3]
   - [Un-configured dependencies][2.4]
   - [Multiple dependencies][2.5]
-- [License][3]
+- [Changelog][3]
+- [License][4]
 
 [0]: #installation "Install all the things"
 [1]: #how-does-it-work "it's like magic, unicorns and narwals combined in to awesomness"
@@ -44,7 +45,7 @@ are needed.
 [2.3]: #installingrequiring-a-configured-dependency
 [2.4]: #installingrequiring-a-un-configured-dependency
 [2.5]: #installingrequiring-multiple-dependencies
-[3]: #license-mit "Stuff"
+[4]: #license-mit "Stuff"
 
 ---
 
@@ -219,6 +220,16 @@ canihaz(
     }
 );
 ```
+
+---
+
+## Changelog
+
+__1.0.0__ Rewritten to use the `npm` binary for all installations because the
+programatically API causes to much issues and edge cases. 1.0.0 also features a
+full test suite and a reworked more powerful API.
+
+_all other version were crap anyways_
 
 ---
 
