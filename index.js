@@ -155,7 +155,7 @@ module.exports = function canihazitplxktnxilubai(config) {
           // If we have an Error, save it, but don't override it always have the
           // same, first error stored
           if (err && !error) error = err;
-          if (Object.keys(fetched).lengh < args.length) return;
+          if (Object.keys(fetched).length < args.length) return;
 
           var applies = [error];
 
@@ -165,6 +165,7 @@ module.exports = function canihazitplxktnxilubai(config) {
             applies.push(fetched[item]);
           });
 
+          if (error) debug('failed to process multiple dependencies due to '+ error);
           cb.apply(cb, applies);
         });
       });
@@ -281,6 +282,8 @@ function requiretron3000(config, name, version, cb) {
  * @api private
  */
 function install(cwd, name, version, cb) {
+  var noRegistry;
+
   if (version) {
     // * installations is basically just an installation without a version, so
     // just ignore this version
@@ -295,12 +298,15 @@ function install(cwd, name, version, cb) {
       if (version && /\s/.test(version)) version = '"'+ version +'"';
       if (version) version = '@'+ version;
     } else if (version) {
-      name = version;
+      // This is probably not a valid version but a tarbal or git url, we cannot
+      // override the name variable or we cannot require it again so we have to
+      // use a other variable to change the "name" that we want to install
+      noRegistry = version;
       version = '';
     }
   }
 
-  var installation = name + version;
+  var installation = (noRegistry || name) + version;
 
   // Check if we already have an installation running for this module, if so, we
   // are gonna register a listener for the installation
@@ -314,8 +320,13 @@ function install(cwd, name, version, cb) {
   // users configured defaults and we don't have to worry about that. If this
   // installation doesn't work, the regular installation wouldn't have worked
   // either.
-  var command = (npm +' install '+ installation).trim();
+  var command = npm;
+
+  // Please note that we need to add command flags BEFORE add the install
+  // command, if it's appended behind, it could cause installations to fail.
+  // I've seen this happen with git based installations
   command += ' --parseable'; // Parsable output
+  command +=' install '+ installation.trim();
 
   debug('spawning NPM: '+ command + ', in cwd: '+ cwd);
   exec(command
@@ -330,6 +341,9 @@ function install(cwd, name, version, cb) {
           // only set the error if we don't have an error all ready
           if (!err) err = e;
         }
+
+        if (err) debug('installation of '+ name + ' generated an issue: '+ err);
+        if (stderr) debug('installation of '+ name + ' generated stderr: '+ stderr);
 
         queue.emit(installation, err, library);
       }
