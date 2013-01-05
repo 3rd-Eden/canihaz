@@ -12,6 +12,9 @@
     "optionalDepdencies"
   ],
   "version": "1.0.0",
+  "scripts": {
+    "test": "make test"
+  },
   "homepage": "https://github.com/3rd-Eden/canihaz",
   "repository": {
     "type": "git",
@@ -22,5 +25,19 @@
     "which": "1.0.x",
     "semver": "1.1.x",
     "mkdirp": "0.3.x"
+  },
+  "devDependencies": {
+    "mocha": "1.7.x",
+    "chai": "1.4.x"
+  },
+  "canihaz": {
+    "request": "2.12.x",
+    "routable": "git@github.com:3rd-Eden/routable.git#master"
+  },
+  "fooBar": {
+    "request": "*"
+  },
+  "existingDependencies": {
+    "semver": "1.1.x"
   }
 }
