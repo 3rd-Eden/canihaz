@@ -281,7 +281,10 @@ function install(cwd, name, version, cb) {
   // users configured defaults and we don't have to worry about that. If this
   // installation doesn't work, the regular installation wouldn't have worked
   // either.
-  exec(npm +' install '+ installation
+  var command = (npm +' install '+ installation).trim();
+  command += ' --parseable'; // Parsable output
+
+  exec(command
     , {
           cwd: cwd  // Where should we spawn the installation
       }
@@ -289,7 +292,10 @@ function install(cwd, name, version, cb) {
         var library;
 
         try { library = require(path.join(cwd, 'node_modules', name)); }
-        catch(e) {}
+        catch(e) {
+          // only set the error if we don't have an error all ready
+          if (!err) err = e;
+        }
 
         queue.emit(installation, err, library);
       }
@@ -304,6 +310,16 @@ function install(cwd, name, version, cb) {
  * @api private
  */
 function ensure(dir, cb) {
+  // NPM has a really funky way of figuring out where to put the dependencies,
+  // if the folder doesn't have a `node_modules` folder it tries to figure out
+  // if there is a node_modules folder in the parent and it will attempt to
+  // install the module there. This will cause a miss match for us we because we
+  // are requiring modules from an absolute path, not the NPM magical path. To
+  // combat this behaviour we need to make sure that we also create the
+  // `node_modules` folder in the given directory. So NPM knows that we really,
+  // REALLY want to install it in the `cwd` that we gave the spawned process
+  dir = path.join(dir, 'node_modules');
+
   // If the fs.stat returns an error we are pretty sure that it doesn't exist,
   // so we should create it
   fs.stat(dir, function exists(err, stat) {
