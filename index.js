@@ -113,8 +113,8 @@ module.exports = function canihazitplxktnxilubai(config) {
   function has(name, version, cb) {
     var regular = typeof name === 'string'
         && typeof version === 'string'
-        && typeof cb ===  'version'
-        && version === '' || semver.valid(version);
+        && typeof cb ===  'function'
+        && version === '' || semver.satisfies(version);
 
     if (!regular) {
       var args = Array.prototype.slice.call(arguments, 0)
