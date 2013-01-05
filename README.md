@@ -1,4 +1,5 @@
 # canihaz - supercharged dependency loading and installation
+[![build status](https://secure.travis-ci.org/3rd-Eden/canihaz.png)](http://travis-ci.org/3rd-Eden/canihaz)
 
 Canihaz is a module that allows you to lazily install and require NPM modules
 that might not be required for the core functionality of your library. This
