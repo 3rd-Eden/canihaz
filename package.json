@@ -33,7 +33,8 @@
   },
   "canihaz": {
     "request": "2.12.x",
-    "routable": "git@github.com:3rd-Eden/routable.git#master"
+    "routable": "git://github.com/3rd-Eden/routable.git#master",
+    "useragent": "*"
   },
   "fooBar": {
     "request": "*"
