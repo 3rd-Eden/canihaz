@@ -45,6 +45,7 @@ are needed.
 [2.3]: #installingrequiring-a-configured-dependency
 [2.4]: #installingrequiring-a-un-configured-dependency
 [2.5]: #installingrequiring-multiple-dependencies
+[3]: #changelog "Changelog"
 [4]: #license-mit "Stuff"
 
 ---
