@@ -101,12 +101,49 @@ describe('canihaz?', function () {
     });
   });
 
-  describe('- Requiring a configured dependency', function () {
-  });
-
   describe('- Requiring a un-configured dependency', function () {
+    it('should require a dependency with a version', function (done) {
+      canihaz()('request', '1.2.0', done);
+    });
+
+    it('should require a dependency without a version', function (done) {
+      canihaz()('socket.io', '', done);
+    });
   });
 
   describe('- Requiring multiple dependencies', function () {
+    it('should install multiple dependencies', function (done) {
+      var has = canihaz();
+
+      has('request', 'routable', 'useragent', function (err, request, routable, ua) {
+        expect(err).to.not.be.an.instanceof(Error);
+
+        expect(request).to.be.a('function');
+        expect(routable).to.be.a('function');
+        expect(ua).to.be.a('function');
+        expect(ua.parse).to.be.a('function');
+
+        done();
+      });
+    });
+
+    it('should install multiple dependencies with version nrs', function (done) {
+      var has = canihaz();
+
+      has(
+          { name: 'async', version: '0.1.22' }
+        , 'underscore'
+        , { name: 'jade', version: '0.27.7' }
+        , function (err, async, _, jade) {
+            expect(err).to.not.be.an.instanceof(Error);
+
+            expect(async.forEach).to.be.a('function');
+            expect(_.each).to.be.a('function');
+            expect(jade.compile).to.be.a('function');
+
+            done();
+          }
+      );
+    });
   });
 });
