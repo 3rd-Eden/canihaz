@@ -329,7 +329,7 @@ function install(cwd, name, version, cb) {
   command +=' install '+ installation.trim();
 
   debug('spawning npm: '+ command + ', in cwd: '+ cwd);
-  exec(command
+  exec('"'+ command +'"'
     , {
           cwd: cwd  // Where should we spawn the installation
       }
