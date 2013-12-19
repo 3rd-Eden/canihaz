@@ -1,7 +1,7 @@
 'use strict';
 
 /**!
- * canihaz.js: Optional, Async installation of NPM packages. No more bloated
+ * canihaz.js: Optional, Async installation of npm packages. No more bloated
  * dependencies list that is not used every time.
  *
  * @copyright (c) 2012 observe.it (observe.it) <opensource@observe.it>
@@ -24,7 +24,7 @@ var mkdirp = require('mkdirp')
   , which = require('which')
   , npm;
 
-// Find the location of the NPM installation so we can spawn it
+// Find the location of the npm installation so we can spawn it
 try { npm = which.sync('npm'); }
 catch (e) { npm = 'npm'; }
 
@@ -276,7 +276,7 @@ function requiretron3000(config, name, version, cb) {
  * Install the package in the given location
  *
  * @param {String} cwd current working directory where we spawn the child
- * @param {String} name name of the NPM module to install
+ * @param {String} name name of the npm module to install
  * @param {String} version version number or supply an empty string
  * @param {Function} cb callback, all done <3
  * @api private
@@ -316,11 +316,11 @@ function install(cwd, name, version, cb) {
   // the queue that we have installations waiting for this module.
   queue.once(installation, cb);
 
-  // Spawn the NPM binary and have it do it's magic, this way it's using the
+  // Spawn the npm binary and have it do it's magic, this way it's using the
   // users configured defaults and we don't have to worry about that. If this
   // installation doesn't work, the regular installation wouldn't have worked
-  // either.
-  var command = npm;
+  // either. Wrapping in qoutes is required for Windows compatibility.
+  var command = '"'+ npm+'"';
 
   // Please note that we need to add command flags BEFORE add the install
   // command, if it's appended behind, it could cause installations to fail.
@@ -328,7 +328,7 @@ function install(cwd, name, version, cb) {
   command += ' --parseable'; // Parsable output
   command +=' install '+ installation.trim();
 
-  debug('spawning NPM: '+ command + ', in cwd: '+ cwd);
+  debug('spawning npm: '+ command + ', in cwd: '+ cwd);
   exec(command
     , {
           cwd: cwd  // Where should we spawn the installation
@@ -358,13 +358,13 @@ function install(cwd, name, version, cb) {
  * @api private
  */
 function ensure(dir, cb) {
-  // NPM has a really funky way of figuring out where to put the dependencies,
+  // npm has a really funky way of figuring out where to put the dependencies,
   // if the folder doesn't have a `node_modules` folder it tries to figure out
   // if there is a node_modules folder in the parent and it will attempt to
   // install the module there. This will cause a miss match for us we because we
-  // are requiring modules from an absolute path, not the NPM magical path. To
+  // are requiring modules from an absolute path, not the npm magical path. To
   // combat this behaviour we need to make sure that we also create the
-  // `node_modules` folder in the given directory. So NPM knows that we really,
+  // `node_modules` folder in the given directory. So npm knows that we really,
   // REALLY want to install it in the `cwd` that we gave the spawned process
   dir = path.join(dir, 'node_modules');
 
