@@ -319,8 +319,8 @@ function install(cwd, name, version, cb) {
   // Spawn the npm binary and have it do it's magic, this way it's using the
   // users configured defaults and we don't have to worry about that. If this
   // installation doesn't work, the regular installation wouldn't have worked
-  // either.
-  var command = npm;
+  // either. Wrapping in qoutes is required for Windows compatibility.
+  var command = '"'+ npm+'"';
 
   // Please note that we need to add command flags BEFORE add the install
   // command, if it's appended behind, it could cause installations to fail.
@@ -329,7 +329,7 @@ function install(cwd, name, version, cb) {
   command +=' install '+ installation.trim();
 
   debug('spawning npm: '+ command + ', in cwd: '+ cwd);
-  exec('"'+ command +'"'
+  exec(command
     , {
           cwd: cwd  // Where should we spawn the installation
       }
