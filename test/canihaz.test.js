@@ -28,7 +28,7 @@ describe('canihaz?', function () {
   });
 
   it('exposes the queue', function () {
-    assume(canihaz.queue).to.be.an.instanceof(require('events').EventEmitter);
+    assume(canihaz.queue).is.instanceOf(require('events').EventEmitter);
   });
 
   describe('@ configuration', function () {
@@ -54,7 +54,7 @@ describe('canihaz?', function () {
 
       has.request(function lazy(err, request) {
         assume(request).to.be.a('function');
-        assume(err).to.not.be.an.instanceof(Error);
+        assume(err).is.not.a('error');
 
         fs.stat(path.join(home, '.foo'), done);
       });
@@ -65,7 +65,7 @@ describe('canihaz?', function () {
 
       has.request(function lazy(err, request) {
         assume(request).to.be.a('function');
-        assume(err).to.not.be.an.instanceof(Error);
+        assume(err).is.not.a('error');
 
         fs.stat(path.join(home, '.foo'), done);
       });
@@ -75,7 +75,7 @@ describe('canihaz?', function () {
       var has = canihaz({ home: __dirname, dot: 'foo' });
 
       has.request(function lazy(err, request) {
-        assume(err).to.not.be.an.instanceof(Error);
+        assume(err).is.not.a('error');
         assume(request).to.be.a('function');
 
         fs.stat(path.join(__dirname, '.foo'), done);
@@ -113,7 +113,7 @@ describe('canihaz?', function () {
       var has = canihaz();
 
       has('request', 'routable', 'useragent', function (err, request, routable, ua) {
-        assume(err).to.not.be.an.instanceof(Error);
+        assume(err).is.not.a('error');
 
         assume(request).to.be.a('function');
         assume(routable).to.be.a('function');
@@ -132,7 +132,7 @@ describe('canihaz?', function () {
         , 'underscore'
         , { name: 'jade', version: '0.27.7' }
         , function (err, async, _, jade) {
-            assume(err).to.not.be.an.instanceof(Error);
+            assume(err).is.not.a('error');
 
             assume(async.forEach).to.be.a('function');
             assume(_.each).to.be.a('function');
