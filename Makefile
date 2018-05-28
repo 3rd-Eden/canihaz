@@ -1,5 +1,5 @@
 ALL_TESTS = $(shell find test/ -name '*.test.js')
-NPM_TARBALL = $(shell npm pack)
+NPM_TARBALL = $(shell npm pack -q)
 
 test:
 	# Install the module as node_module, so it can parse our package.json for
