@@ -22,14 +22,14 @@
   },
   "main": "index.js",
   "dependencies": {
-    "which": "1.0.x",
-    "semver": "1.1.x",
-    "mkdirp": "0.3.x"
+    "mkdirp": "0.5.x",
+    "semver": "5.5.x",
+    "which": "1.3.x"
   },
   "devDependencies": {
-    "mocha": "1.7.x",
-    "chai": "1.4.x",
-    "rimraf": "2.1.x"
+    "assume": "2.0.x",
+    "mocha": "5.2.x",
+    "rimraf": "2.6.x"
   },
   "canihaz": {
     "request": "2.12.x",

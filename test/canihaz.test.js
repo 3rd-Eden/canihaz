@@ -4,12 +4,9 @@ describe('canihaz?', function () {
   //
   // Modules that are required for asserting the tests
   //
-  var chai = require('chai')
+  var assume = require('assume')
     , path = require('path')
-    , expect = chai.expect
     , fs = require('fs');
-
-  chai.Assertion.includeStack = true;
 
   //
   // The actual library that we run tests against
@@ -27,11 +24,11 @@ describe('canihaz?', function () {
   var home = process.env.HOME || process.env.USERPROFILE;
 
   it('should expose it self as a function', function () {
-    expect(canihaz).to.be.a('function');
+    assume(canihaz).to.be.a('function');
   });
 
   it('exposes the queue', function () {
-    expect(canihaz.queue).to.be.an.instanceof(require('events').EventEmitter);
+    assume(canihaz.queue).to.be.an.instanceof(require('events').EventEmitter);
   });
 
   describe('@ configuration', function () {
@@ -39,7 +36,7 @@ describe('canihaz?', function () {
       var has = canihaz({ key: 'devDependencies' });
 
       Object.keys(definitions.devDependencies).forEach(function (lib) {
-        expect(has[lib]).to.be.a('function');
+        assume(has[lib]).to.be.a('function');
       });
     });
 
@@ -48,7 +45,7 @@ describe('canihaz?', function () {
         , definitions = require(__dirname + '/package.json');
 
       Object.keys(definitions.canihaz).forEach(function (lib) {
-        expect(has[lib]).to.be.a('function');
+        assume(has[lib]).to.be.a('function');
       });
     });
 
@@ -56,8 +53,8 @@ describe('canihaz?', function () {
       var has = canihaz({ dot: 'foo' });
 
       has.request(function lazy(err, request) {
-        expect(request).to.be.a('function');
-        expect(err).to.not.be.an.instanceof(Error);
+        assume(request).to.be.a('function');
+        assume(err).to.not.be.an.instanceof(Error);
 
         fs.stat(path.join(home, '.foo'), done);
       });
@@ -67,8 +64,8 @@ describe('canihaz?', function () {
       var has = canihaz('foo');
 
       has.request(function lazy(err, request) {
-        expect(request).to.be.a('function');
-        expect(err).to.not.be.an.instanceof(Error);
+        assume(request).to.be.a('function');
+        assume(err).to.not.be.an.instanceof(Error);
 
         fs.stat(path.join(home, '.foo'), done);
       });
@@ -78,8 +75,8 @@ describe('canihaz?', function () {
       var has = canihaz({ home: __dirname, dot: 'foo' });
 
       has.request(function lazy(err, request) {
-        expect(err).to.not.be.an.instanceof(Error);
-        expect(request).to.be.a('function');
+        assume(err).to.not.be.an.instanceof(Error);
+        assume(request).to.be.a('function');
 
         fs.stat(path.join(__dirname, '.foo'), done);
       });
@@ -116,12 +113,12 @@ describe('canihaz?', function () {
       var has = canihaz();
 
       has('request', 'routable', 'useragent', function (err, request, routable, ua) {
-        expect(err).to.not.be.an.instanceof(Error);
+        assume(err).to.not.be.an.instanceof(Error);
 
-        expect(request).to.be.a('function');
-        expect(routable).to.be.a('function');
-        expect(ua).to.be.a('function');
-        expect(ua.parse).to.be.a('function');
+        assume(request).to.be.a('function');
+        assume(routable).to.be.a('function');
+        assume(ua).to.be.a('function');
+        assume(ua.parse).to.be.a('function');
 
         done();
       });
@@ -135,11 +132,11 @@ describe('canihaz?', function () {
         , 'underscore'
         , { name: 'jade', version: '0.27.7' }
         , function (err, async, _, jade) {
-            expect(err).to.not.be.an.instanceof(Error);
+            assume(err).to.not.be.an.instanceof(Error);
 
-            expect(async.forEach).to.be.a('function');
-            expect(_.each).to.be.a('function');
-            expect(jade.compile).to.be.a('function');
+            assume(async.forEach).to.be.a('function');
+            assume(_.each).to.be.a('function');
+            assume(jade.compile).to.be.a('function');
 
             done();
           }
